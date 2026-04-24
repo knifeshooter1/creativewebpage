@@ -39,13 +39,15 @@ const vc=5000,vG=new THREE.BufferGeometry(),vP=new Float32Array(vc*3),vC=new Flo
 for(let i=0;i<vc;i++){const a=(i/vc)*Math.PI*16,r=0.2+(i/vc)*8,j=Math.pow(i/vc,0.5)*2;vP[i*3]=Math.cos(a)*r+(Math.random()-0.5)*j;vP[i*3+1]=2.5+Math.sin(a)*r*0.4+(Math.random()-0.5)*j;vP[i*3+2]=-14-Math.random()*12;const tt=i/vc;vC[i*3]=0.05+tt*0.4;vC[i*3+1]=0.2+(1-tt)*0.7;vC[i*3+2]=0.7+tt*0.3;}
 vG.setAttribute('position',new THREE.BufferAttribute(vP,3));vG.setAttribute('color',new THREE.BufferAttribute(vC,3));
 const vortex=new THREE.Points(vG,new THREE.PointsMaterial({size:0.1,vertexColors:true,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false}));
+vortex.position.set(-18, 2, -10);
+vortex.scale.set(0.6, 0.6, 0.6);
 scene.add(vortex);
 for(let L=0;L<2;L++){const c2=1500,g2=new THREE.BufferGeometry(),p2=new Float32Array(c2*3),c3=new Float32Array(c2*3);for(let i=0;i<c2;i++){const a2=Math.random()*Math.PI*2,r2=1+Math.random()*7;p2[i*3]=Math.cos(a2)*r2+(Math.random()-0.5)*3;p2[i*3+1]=2.5+Math.sin(a2)*r2*0.3+(Math.random()-0.5)*2;p2[i*3+2]=-16-L*5-Math.random()*6;c3[i*3]=L===0?0.3:0.5;c3[i*3+1]=L===0?0.1:0;c3[i*3+2]=L===0?0.8:0.9;}g2.setAttribute('position',new THREE.BufferAttribute(p2,3));g2.setAttribute('color',new THREE.BufferAttribute(c3,3));scene.add(new THREE.Points(g2,new THREE.PointsMaterial({size:0.15+L*0.1,vertexColors:true,transparent:true,opacity:0.3,blending:THREE.AdditiveBlending,depthWrite:false})));}
 
-// ===== HUMANOID — HALF BODY, positioned far right so left half visible =====
+// ===== HUMANOID — MEDIUM-CLOSE PORTRAIT =====
 const humanGroup = new THREE.Group();
-humanGroup.position.set(9, -5, 4);
-humanGroup.scale.set(3.5, 3.5, 3.5);
+humanGroup.position.set(4, -21.5, 6);
+humanGroup.scale.set(5, 5, 5);
 scene.add(humanGroup);
 
 function mk(shape, s, p, n) {
@@ -94,64 +96,47 @@ const spine=new THREE.Points(mk('c',[0.06,2.2,0.06],[0,4.0,-0.3],600),hG);
 const ribL=new THREE.Points(mk('b',[0.15,0.6,0.35],[0.5,4.1,0.15],800),hI);
 const ribR=new THREE.Points(mk('b',[0.15,0.6,0.35],[-0.5,4.1,0.15],800),hI);
 
-// RIGHT ARM — static, wrapped around knees (this is the arm we see)
-const rUA=new THREE.Points(mk('c',[0.18,1.0,0.18],[-0.65,3.9,0.3],1000),hD);
-const rFA=new THREE.Points(mk('c',[0.15,0.8,0.15],[-0.5,3.3,0.7],800),hD);
-const rHand=new THREE.Points(mk('s',[0.16,0.13,0.12],[-0.25,3.1,0.95],500),hM);
+// LEFT ARM — static (partially visible or hidden depending on framing)
+const lUA=new THREE.Points(mk('c',[0.18,1.0,0.18],[0.65,3.9,0.3],1000),hD);
+const lFA=new THREE.Points(mk('c',[0.15,0.8,0.15],[0.5,3.3,0.7],800),hD);
+const lHand=new THREE.Points(mk('s',[0.16,0.13,0.12],[0.25,3.1,0.95],500),hM);
 
-// LEFT ARM — THIS ONE FOLLOWS THE CURSOR
-const leftArmGroup = new THREE.Group();
-// Upper arm pivot at left shoulder
-const lUA=new THREE.Points(mk('c',[0.18,1.0,0.18],[0,−0.5,0],1200),hD);
-const lUAdetail=new THREE.Points(mk('c',[0.12,0.8,0.12],[0,-0.5,0],500),hI);
-leftArmGroup.add(lUA,lUAdetail);
+// RIGHT ARM — THIS ONE FOLLOWS THE CURSOR
+const rightArmGroup = new THREE.Group();
+// Upper arm pivot at right shoulder
+const rUA=new THREE.Points(mk('c',[0.18,1.0,0.18],[0,-0.5,0],1200),hD);
+const rUAdetail=new THREE.Points(mk('c',[0.12,0.8,0.12],[0,-0.5,0],500),hI);
+rightArmGroup.add(rUA,rUAdetail);
 
 // Forearm as child
 const forearmGroup = new THREE.Group();
 forearmGroup.position.set(0,-1,0);
-const lFA=new THREE.Points(mk('c',[0.15,0.8,0.15],[0,-0.4,0],1000),hD);
-const lFAdetail=new THREE.Points(mk('c',[0.1,0.7,0.1],[0,-0.4,0],400),hI);
-forearmGroup.add(lFA,lFAdetail);
+const rFA=new THREE.Points(mk('c',[0.15,0.8,0.15],[0,-0.4,0],1000),hD);
+const rFAdetail=new THREE.Points(mk('c',[0.1,0.7,0.1],[0,-0.4,0],400),hI);
+forearmGroup.add(rFA,rFAdetail);
 
 // Hand at end of forearm
 const handGroup = new THREE.Group();
 handGroup.position.set(0,-0.85,0);
-const lPalm=new THREE.Points(mk('s',[0.18,0.14,0.1],[0,0,0],600),hM);
-const lThumb=new THREE.Points(mk('c',[0.04,0.15,0.04],[0.12,0.05,0.05],200),hG);
-const lIndex=new THREE.Points(mk('c',[0.03,0.2,0.03],[0.06,−0.18,0.02],250),hG);
-const lMiddle=new THREE.Points(mk('c',[0.03,0.22,0.03],[0,−0.2,0.02],250),hG);
-const lRing=new THREE.Points(mk('c',[0.03,0.18,0.03],[-0.05,-0.17,0.02],200),hG);
-const lPinky=new THREE.Points(mk('c',[0.025,0.15,0.025],[-0.1,-0.14,0.02],180),hG);
-const lFingerTips=new THREE.Points(mk('s',[0.15,0.05,0.08],[0,-0.25,0.02],300),hG);
-handGroup.add(lPalm,lThumb,lIndex,lMiddle,lRing,lPinky,lFingerTips);
+const rPalm=new THREE.Points(mk('s',[0.18,0.14,0.1],[0,0,0],600),hM);
+const rThumb=new THREE.Points(mk('c',[0.04,0.15,0.04],[-0.12,0.05,0.05],200),hG);
+const rIndex=new THREE.Points(mk('c',[0.03,0.2,0.03],[-0.06,-0.18,0.02],250),hG);
+const rMiddle=new THREE.Points(mk('c',[0.03,0.22,0.03],[0,-0.2,0.02],250),hG);
+const rRing=new THREE.Points(mk('c',[0.03,0.18,0.03],[0.05,-0.17,0.02],200),hG);
+const rPinky=new THREE.Points(mk('c',[0.025,0.15,0.025],[0.1,-0.14,0.02],180),hG);
+const rFingerTips=new THREE.Points(mk('s',[0.15,0.05,0.08],[0,-0.25,0.02],300),hG);
+handGroup.add(rPalm,rThumb,rIndex,rMiddle,rRing,rPinky,rFingerTips);
 forearmGroup.add(handGroup);
-leftArmGroup.add(forearmGroup);
-leftArmGroup.position.set(0.7,4.75,0); // shoulder position
-humanGroup.add(leftArmGroup);
+rightArmGroup.add(forearmGroup);
+rightArmGroup.position.set(-0.7,4.75,0); // right shoulder position
+humanGroup.add(rightArmGroup);
 
-// THIGHS (sitting, going forward)
-const tL=new THREE.Points(mk('c',[0.25,1.1,0.25],[0.35,2.9,0.4],1800),hD);
-const tR=new THREE.Points(mk('c',[0.25,1.1,0.25],[-0.35,2.9,0.4],1800),hD);
-const tLD=new THREE.Points(mk('c',[0.2,0.9,0.2],[0.35,2.95,0.45],800),hI);
-const tRD=new THREE.Points(mk('c',[0.2,0.9,0.2],[-0.35,2.95,0.45],800),hI);
-
-// KNEES
-const kL=new THREE.Points(mk('s',[0.22,0.22,0.22],[0.35,3.1,0.9],700),hM);
-const kR=new THREE.Points(mk('s',[0.22,0.22,0.22],[-0.35,3.1,0.9],700),hM);
-
-// SHINS (coming back up)
-const sHL=new THREE.Points(mk('c',[0.18,1.0,0.18],[0.35,3.6,0.95],1200),hD);
-const sHR=new THREE.Points(mk('c',[0.18,1.0,0.18],[-0.35,3.6,0.95],1200),hD);
-
-// FEET
-const fL=new THREE.Points(mk('b',[0.2,0.12,0.4],[0.35,2.5,0.65],500),hD);
-const fR=new THREE.Points(mk('b',[0.2,0.12,0.4],[-0.35,2.5,0.65],500),hD);
+// No legs to save geometry for close-up view
 
 humanGroup.add(head,skull,brow,eyeL,eyeR,jaw,cheekL,cheekR,
     neck,neckDetail,sL,sR,sDL,sDR,
     chest,chestInner,abs,absDetail,spine,ribL,ribR,
-    rUA,rFA,rHand,
-    tL,tR,tLD,tRD,kL,kR,sHL,sHR,fL,fR);
+    lUA,lFA,lHand);
 
 // Aura
 const aC=4000,aG2=new THREE.BufferGeometry(),aP2=new Float32Array(aC*3);
@@ -167,12 +152,12 @@ dG.setAttribute('position',new THREE.BufferAttribute(dP2,3));
 const dust=new THREE.Points(dG,new THREE.PointsMaterial({color:0x3366ee,size:0.025,transparent:true,opacity:0.28,blending:THREE.AdditiveBlending,depthWrite:false}));
 humanGroup.add(dust);
 
-// Workspace (far right, mostly hidden behind figure)
+// Workspace (far left, foreground)
 const dkM=new THREE.MeshStandardMaterial({color:0x0c0c18,metalness:0.7,roughness:0.4});
-const desk=new THREE.Mesh(new THREE.BoxGeometry(3.5,0.08,1.6),dkM);desk.position.set(7,-2,-4);scene.add(desk);
+const desk=new THREE.Mesh(new THREE.BoxGeometry(3.5,0.08,1.6),dkM);desk.position.set(-8,-2,2);scene.add(desk);
 const mM=new THREE.MeshStandardMaterial({color:0x080810,metalness:0.9,roughness:0.2});
-const mon=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.1,0.05),mM);mon.position.set(7,-0.8,-4.6);scene.add(mon);
-const scr=new THREE.Mesh(new THREE.PlaneGeometry(1.6,0.9),new THREE.MeshBasicMaterial({color:0x00ff44}));scr.position.set(7,-0.8,-4.57);scene.add(scr);
+const mon=new THREE.Mesh(new THREE.BoxGeometry(1.8,1.1,0.05),mM);mon.position.set(-8,-0.8,1.4);scene.add(mon);
+const scr=new THREE.Mesh(new THREE.PlaneGeometry(1.6,0.9),new THREE.MeshBasicMaterial({color:0x00ff44}));scr.position.set(-8,-0.8,1.43);scene.add(scr);
 
 // Stars
 const sC2=3000,sG2=new THREE.BufferGeometry(),sP2=new Float32Array(sC2*3);
@@ -184,7 +169,6 @@ scene.fog=new THREE.FogExp2(0x020108,0.012);
 
 // ===== MOUSE / CURSOR =====
 let mouseX=0,mouseY=0,targetCamX=0,mouseScreenX=0,mouseScreenY=0;
-const cursor=document.getElementById('custom-cursor');
 const raycaster=new THREE.Raycaster();
 const mouseVec=new THREE.Vector2();
 // Target for the hand in world space
@@ -195,19 +179,16 @@ document.addEventListener('mousemove',e=>{
     mouseY=-(e.clientY/innerHeight)*2+1;
     mouseScreenX=e.clientX;
     mouseScreenY=e.clientY;
-    cursor.style.left=e.clientX+'px';
-    cursor.style.top=e.clientY+'px';
-    // Convert mouse to 3D world position on a plane at z=4 (where figure is)
+    // Convert mouse to 3D world position on a plane near camera
     mouseVec.set(mouseX,mouseY);
     raycaster.setFromCamera(mouseVec,camera);
-    const planeZ=4;
+    const planeZ=6.5; 
     const dist=(planeZ-camera.position.z)/raycaster.ray.direction.z;
     handTarget=raycaster.ray.origin.clone().add(raycaster.ray.direction.clone().multiplyScalar(dist));
 });
 
 document.querySelectorAll('.nav-item,.work-card,.hero-cta,.contact-link,.signal-btn,a').forEach(el=>{
-    el.addEventListener('mouseenter',()=>cursor.classList.add('hovering'));
-    el.addEventListener('mouseleave',()=>cursor.classList.remove('hovering'));
+    // Optionally trigger a hover state globally if needed, cursor removed
 });
 
 // Navigation
@@ -248,42 +229,42 @@ function animate(){
     vortex.rotation.z=t*0.06;
     
     // Breathing
-    humanGroup.children.forEach((ch,i)=>{if(ch!==leftArmGroup&&ch!==aura&&ch!==dust)ch.position.y+=Math.sin(t*1.2+i*0.1)*0.0002;});
+    humanGroup.children.forEach((ch,i)=>{if(ch!==rightArmGroup&&ch!==aura&&ch!==dust)ch.position.y+=Math.sin(t*1.2+i*0.1)*0.0002;});
     head.rotation.z=Math.sin(t*0.4)*0.03;
     
-    // ===== LEFT ARM FOLLOWS CURSOR =====
+    // ===== RIGHT ARM FOLLOWS CURSOR =====
     // Convert handTarget from world space to humanGroup local space
     const localTarget=humanGroup.worldToLocal(handTarget.clone());
     // Smooth interpolation
-    smoothHand.lerp(localTarget,0.08);
+    smoothHand.lerp(localTarget,0.12);
     
     // Calculate arm angles from shoulder to target
-    const shoulderPos=new THREE.Vector3(0.7,4.75,0);
+    const shoulderPos=new THREE.Vector3(-0.7,4.75,0);
     const toTarget=smoothHand.clone().sub(shoulderPos);
     const dist=toTarget.length();
-    const maxReach=2.0;
+    const maxReach=2.5;
     const clampedDist=Math.min(dist,maxReach);
     const dir=toTarget.normalize();
     const reachPoint=shoulderPos.clone().add(dir.clone().multiplyScalar(clampedDist));
     
     // Point upper arm toward target
-    leftArmGroup.lookAt(
-        leftArmGroup.position.x+dir.x,
-        leftArmGroup.position.y+dir.y,
-        leftArmGroup.position.z+dir.z
+    rightArmGroup.lookAt(
+        rightArmGroup.position.x+dir.x,
+        rightArmGroup.position.y+dir.y,
+        rightArmGroup.position.z+dir.z
     );
     // Rotate so arm extends along -Y (local down)
-    leftArmGroup.rotateX(-Math.PI/2);
+    rightArmGroup.rotateX(-Math.PI/2);
     
     // Scale forearm stretch based on distance
-    const stretch=Math.min(clampedDist/1.8,1.2);
+    const stretch=Math.min(clampedDist/1.8,1.4);
     forearmGroup.position.y=-1*stretch;
     handGroup.position.y=-0.85*stretch;
     
     // Hand glow intensifies near interactive elements
     const nearUI=mouseScreenX<innerWidth*0.45;
-    lPalm.material.opacity=nearUI?1:0.55;
-    lFingerTips.material.opacity=nearUI?0.9:0.4;
+    rPalm.material.opacity=nearUI?1:0.55;
+    rFingerTips.material.opacity=nearUI?0.9:0.4;
     
     // Dust trail
     const dp=dust.geometry.attributes.position;
