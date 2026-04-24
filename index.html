@@ -3,52 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative Portfolio — Video Journey</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Cinematic Video Navigation</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <!-- Background Video for Scrubbing -->
-    <video id="bg-video" src="videoforsite.mp4" muted playsinline preload="auto"></video>
-
-    <!-- Scrollable Site Content -->
-    <div id="scroll-container">
-        <section class="step" id="step-home">
-            <div class="content">
-                <h1>ENTER THE VOID</h1>
-                <p>Scroll to navigate the timeline</p>
-            </div>
-        </section>
-        
-        <section class="step" id="step-about">
-            <div class="content align-left">
-                <h2>ABOUT</h2>
-                <p>A creative entity exploring the spaces between frames.</p>
-            </div>
-        </section>
-
-        <section class="step" id="step-work">
-            <div class="content align-right">
-                <h2>SELECTED WORKS</h2>
-                <ul>
-                    <li>01 — Nebula Engine</li>
-                    <li>02 — Astral OS</li>
-                    <li>03 — Signal Weaver</li>
-                </ul>
-            </div>
-        </section>
-
-        <section class="step" id="step-contact">
-            <div class="content">
-                <h2>TRANSMIT SIGNAL</h2>
-                <a href="mailto:hello@void.space" class="contact-link">hello@void.space</a>
-            </div>
-        </section>
-    </div>
-
-    <!-- Scripts -->
+    <video id="bg-video" src="videoforsite.mp4" autoplay loop muted playsinline preload="auto"></video>
+    
+    <!-- Minimal invisible overlay for cinematic lighting feedback -->
+    <div id="feedback-overlay"></div>
+    
     <script type="module" src="main.js"></script>
 </body>
 </html>

@@ -4,99 +4,88 @@
     box-sizing: border-box;
 }
 
-body {
+body, html {
+    width: 100vw;
+    height: 100vh;
     background-color: #000;
-    color: #fff;
-    font-family: 'Space Grotesk', sans-serif;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
-/* Fixed Background Video */
+/* Video fills the viewport completely */
 #bg-video {
-    position: fixed;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 1;
+    transition: filter 1.2s ease-in-out;
+}
+
+/* Gentle luminance shift triggered by navigation */
+.luminance-shift #bg-video {
+    filter: brightness(1.3) contrast(1.15) saturate(1.1);
+}
+
+/* Overlay for soft cinematic feedback (glows and pulses) */
+#feedback-overlay {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    object-fit: cover; /* Ensures it covers the screen nicely */
-    z-index: -1;
-    opacity: 0.6; /* Slight dimming so text is readable */
+    z-index: 2;
+    pointer-events: none;
+    transition: box-shadow 0.5s ease-out;
 }
 
-/* Scroll Container & Sections */
-#scroll-container {
-    position: relative;
-    z-index: 1;
+/* Hover: Soft directional glow near screen edges */
+#feedback-overlay.hover-left {
+    box-shadow: inset 100px 0 120px -60px rgba(255, 255, 255, 0.15);
+}
+#feedback-overlay.hover-right {
+    box-shadow: inset -100px 0 120px -60px rgba(255, 255, 255, 0.15);
+}
+#feedback-overlay.hover-top {
+    box-shadow: inset 0 100px 120px -60px rgba(255, 255, 255, 0.15);
+}
+#feedback-overlay.hover-bottom {
+    box-shadow: inset 0 -100px 120px -60px rgba(255, 255, 255, 0.15);
 }
 
-.step {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 10vw;
+/* Active: Slight pulse when a zone is activated */
+@keyframes pulseLeft {
+    0% { box-shadow: inset 100px 0 120px -60px rgba(255, 255, 255, 0.15); }
+    30% { box-shadow: inset 200px 0 180px -60px rgba(255, 255, 255, 0.35); }
+    100% { box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+@keyframes pulseRight {
+    0% { box-shadow: inset -100px 0 120px -60px rgba(255, 255, 255, 0.15); }
+    30% { box-shadow: inset -200px 0 180px -60px rgba(255, 255, 255, 0.35); }
+    100% { box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+@keyframes pulseTop {
+    0% { box-shadow: inset 0 100px 120px -60px rgba(255, 255, 255, 0.15); }
+    30% { box-shadow: inset 0 200px 180px -60px rgba(255, 255, 255, 0.35); }
+    100% { box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+@keyframes pulseBottom {
+    0% { box-shadow: inset 0 -100px 120px -60px rgba(255, 255, 255, 0.15); }
+    30% { box-shadow: inset 0 -200px 180px -60px rgba(255, 255, 255, 0.35); }
+    100% { box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0); }
 }
 
-/* Typography & Layout */
-.content {
-    max-width: 600px;
-    text-align: center;
-    margin: 0 auto;
+#feedback-overlay.active-left {
+    animation: pulseLeft 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
-
-.content.align-left {
-    text-align: left;
-    margin: 0;
+#feedback-overlay.active-right {
+    animation: pulseRight 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
-
-.content.align-right {
-    text-align: right;
-    margin: 0 0 0 auto;
+#feedback-overlay.active-top {
+    animation: pulseTop 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
-
-h1 {
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-}
-
-h2 {
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 300;
-    letter-spacing: 0.05em;
-    margin-bottom: 1.5rem;
-}
-
-p {
-    font-size: 1.2rem;
-    font-weight: 300;
-    opacity: 0.8;
-    line-height: 1.6;
-}
-
-ul {
-    list-style: none;
-}
-
-li {
-    font-size: 1.5rem;
-    font-weight: 300;
-    margin-bottom: 1rem;
-    opacity: 0.9;
-}
-
-.contact-link {
-    display: inline-block;
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-    padding-bottom: 0.2rem;
-    transition: border-color 0.3s;
-}
-
-.contact-link:hover {
-    border-color: #fff;
+#feedback-overlay.active-bottom {
+    animation: pulseBottom 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
